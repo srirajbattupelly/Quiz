@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('https://www.w3schools.com/w3images/forestbridge.jpg');
+      background-size: cover;
+      background-position: center;
+      color: white;
+    }
+    nav {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+    .container {
+      background: rgba(0, 0, 
+      0, 0.7);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px auto;
+      width: 80%;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+    .container h2 {
+      text-align: center;
+    }
+    form input[type="text"],
+    form input[type="number"],
+    form input[type="email"],
+    form input[type="tel"],
+    form input[type="password"],
+    form select {
+      width: calc(100% - 22px);
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+    }
+    form input[type="submit"] {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 100%;
+    }
+    form input[type="submit"]:hover {
+      background-color: #218838;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+    table, th, td {
+      border: 1px solid white;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #343a40;
+    }
+    td {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="step_3.html">Users</a>
+    <a href="step_4.html#">Questions</a>
+  </nav>
+  <div class="container">
+    <h2>Admin Dashboard</h2>
+    <form id="add-user-form">
+      <input type="text" id="first-name" placeholder="First Name" required>
+      <input type="text" id="last-name" placeholder="Last Name" required>
+      <select id="qualification" required>
+        <option value="">Select Qualification</option>
+        <option value="High School">High School</option>
+        <option value="Bachelor's Degree">Bachelor's Degree</option>
+        <option value="Master's Degree">Master's Degree</option>
+        <option value="PhD">PhD</option>
+      </select>
+      <input type="number" id="age" placeholder="Age" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="tel" id="phone" placeholder="Phone Number" required>
+      <div>
+        <label>Gender:</label>
+        <label><input type="radio" name="gender" value="Male" required> Male</label>
+        <label><input type="radio" name="gender" value="Female" required> Female</label>
+      </div>
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <input type="submit" value="Add User">
+    </form>
+
+    <h3>Added Users</h3>
+    <div id="added-users"></div>
+  </div>
+
+  <script>
+    document.getElementById("add-user-form").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const newUser = {
+        firstName: document.getElementById("first-name").value,
+        lastName: document.getElementById("last-name").value,
+        qualification: document.getElementById("qualification").value,
+        age: document.getElementById("age").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        gender: document.querySelector('input[name="gender"]:checked').value,
+        username: document.getElementById("username").value,
+        password: document.getElementById("password").value
+      };
+
+      let userData = JSON.parse(localStorage.getItem("userData")) || [];
+      userData.push(newUser);
+      localStorage.setItem("userData", JSON.stringify(userData));
+
+      displayAddedUsers();
+      document.getElementById("add-user-form").reset();
+    });
+
+    function displayAddedUsers() {
+      const userData = JSON.parse(localStorage.getItem("userData")) || [];
+      const addedUsersContainer = document.getElementById("added-users");
+      addedUsersContainer.innerHTML = "";
+
+      userData.forEach((user, index) => {
+        const userDiv = document.createElement("div");
+        userDiv.innerHTML = `
+          <p><strong>Name:</strong> ${user.firstName} ${user.lastName}</p>
+          <p><strong>Qualification:</strong> ${user.qualification}</p>
+          <p><strong>Age:</strong> ${user.age}</p>
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Phone:</strong> ${user.phone}</p>
+          <p><strong>Gender:</strong> ${user.gender}</p>
+          <p><strong>Username:</strong> ${user.username}</p>
+          <p><strong>Password:</strong> ${user.password}</p>
+          <button onclick="deleteUser(${index})">Delete</button>
+          <hr>
+        `;
+        addedUsersContainer.appendChild(userDiv);
+      });
+    }
+
+    function deleteUser(index) {
+      let userData = JSON.parse(localStorage.getItem("userData")) || [];
+      userData.splice(index, 1);
+      localStorage.setItem("userData", JSON.stringify(userData));
+      displayAddedUsers();
+    }
+
+    document.addEventListener("DOMContentLoaded", displayAddedUsers);
+  </script>
+</body>
+</html>

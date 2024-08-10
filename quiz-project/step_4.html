@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('https://www.w3schools.com/w3images/forestbridge.jpg');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      /* margin: 0;
+      padding: 0; */
+    }
+
+    nav {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px auto;
+      width: 80%;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    form input[type="text"],
+    form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    form input[type="submit"] {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 100%;
+    }
+
+    form input[type="submit"]:hover {
+      background-color: #218838;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    table, th, td {
+      border: 1px solid white;
+    }
+
+    th, td {
+     
+      padding: 10px;
+      text-align: left;
+      max-width:0px;
+      word-wrap: break-word;
+      overflow: hidden;
+    }
+
+    th {
+      background-color: #343a40;
+    }
+
+    td {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+
+    .justify-content {
+      text-align: justify;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="step_3.html">Users</a>
+    <a href="step_4.html">Questions</a>
+  </nav>
+  <div class="container">
+    <h2>Admin Dashboard</h2>
+    <!-- Add Question Form -->
+    <div id="question-form-container">
+      <h3>Add Question</h3>
+      <form id="add-question-form">
+        <label for="question">Question:</label>
+        <textarea id="question" name="question" rows="5" required></textarea>
+        <label for="option1">Option 1:</label>
+        <input type="text" id="option1" name="option1" required>
+        <label for="option2">Option 2:</label>
+        <input type="text" id="option2" name="option2" required>
+        <label for="option3">Option 3:</label>
+        <input type="text" id="option3" name="option3" required>
+        <label for="option4">Option 4:</label>
+        <input type="text" id="option4" name="option4" required>
+        <label for="correctOption">Correct Option:</label>
+        <select id="correctOption" name="correctOption" required>
+          <option value="">Select Correct Option</option>
+          <option value="option1">Option 1</option>
+          <option value="option2">Option 2</option>
+          <option value="option3">Option 3</option>
+          <option value="option4">Option 4</option>
+        </select>
+        <input type="submit" value="Add Question">
+      </form>
+    </div>
+
+    <!-- Added Questions -->
+    <h3>Added Questions</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>Option 1</th>
+          <th>Option 2</th>
+          <th>Option 3</th>
+          <th>Option 4</th>
+          <th>Correct Option</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="question-table-body" class="justify-content">
+        <!-- Table body content will be added dynamically -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function getQuestionData() {
+      return JSON.parse(localStorage.getItem("questionData")) || [];
+    }
+
+    function renderQuestionData() {
+      const questionData = getQuestionData();
+      const questionTableBody = document.getElementById("question-table-body");
+      questionTableBody.innerHTML = "";
+
+      questionData.forEach((question, index) => {
+        const row = questionTableBody.insertRow();
+        row.innerHTML = `
+          <td>${question.question}</td>
+          <td>${question.option1}</td>
+          <td>${question.option2}</td>
+          <td>${question.option3}</td>
+          <td>${question.option4}</td>
+          <td>${question.correctOption}</td>
+          <td><button class="delete-btn" onclick="deleteQuestion(${index})">Delete</button></td>
+        `;
+      });
+    }
+
+    function addQuestion(event) {
+      event.preventDefault();
+      const question = document.getElementById("question").value;
+      const option1 = document.getElementById("option1").value;
+      const option2 = document.getElementById("option2").value;
+      const option3 = document.getElementById("option3").value;
+      const option4 = document.getElementById("option4").value;
+      const correctOption = document.getElementById("correctOption").value;
+
+      const newQuestion = {
+        question,
+        option1,
+        option2,
+        option3,
+        option4,
+        correctOption
+      };
+
+      const questionData = getQuestionData();
+      questionData.push(newQuestion);
+      localStorage.setItem("questionData", JSON.stringify(questionData));
+
+      renderQuestionData();
+      alert("Question added successfully!");
+      document.getElementById("add-question-form").reset();
+    }
+
+    function deleteQuestion(index) {
+      const questionData = getQuestionData();
+      questionData.splice(index, 1);
+      localStorage.setItem("questionData", JSON.stringify(questionData));
+      renderQuestionData();
+      alert("Question deleted successfully!");
+    }
+
+    document.getElementById("add-question-form").addEventListener("submit", addQuestion);
+    document.getElementById("question-form-container").style.display = "block";
+    document.addEventListener("DOMContentLoaded", renderQuestionData);
+  </script>
+</body>
+</html>
+x

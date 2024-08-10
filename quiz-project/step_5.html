@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('https://wallpapercave.com/wp/wp4103000.jpg');
+      background-size: cover;
+      background-position: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #login-container {
+      width: 350px;
+      padding: 20px;
+      background-color: rgba(223, 217, 217, 0.781);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      color: #333;
+      text-align: left;
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    input[type="submit"] {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+    .input-container {
+      position: relative;
+    }
+    .input-container img {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+    }
+  </style>
+</head>
+<body>
+    <div id="login-container">
+  <h2>User Login</h2>
+  <form id="user-login-form">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br>
+    <input type="submit" value="Login">
+  </form>
+
+  <script>
+    // Function to check user credentials
+    function checkCredentials(event) {
+      event.preventDefault();
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      // Retrieve user data from local storage
+      const userData = JSON.parse(localStorage.getItem("userData")) || [];
+      const user = userData.find(user => user.username === username && user.password === password);
+
+      if (user) {
+        alert("Login successful!");
+        localStorage.setItem("loggedInUser", JSON.stringify(user));
+        window.location.href = "step_6.html"; // Redirect to exam page
+      } else {
+        alert("Invalid username or password");
+      }
+    }
+
+    // Event listener for submitting the user login form
+    document.getElementById("user-login-form").addEventListener("submit", checkCredentials);
+  </script>
+</body>
+</html>
